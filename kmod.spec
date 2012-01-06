@@ -1,0 +1,104 @@
+Summary:	Linux kernel module handling
+Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
+Name:		kmod
+Version:	3
+Release:	1
+License:	GPL v2
+Group:		Applications
+Source0:	http://packages.profusion.mobi/kmod/%{name}-%{version}.tar.xz
+# Source0-md5:	bc0e69f75c2ac22c091f05e166e86c5d
+URL:		http://git.profusion.mobi/cgit.cgi/kmod.git/
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool
+BuildRequires:	xz-devel >= 1:4.99
+BuildRequires:	zlib-devel
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_bindir		/sbin
+%define		_sbindir	/sbin
+%define		_libdir		/%{_lib}
+
+%description
+kmod is a set of tools to handle common tasks with Linux kernel
+modules like insert, remove, list, check properties, resolve
+dependencies and aliases.
+
+These tools are designed on top of libkmod, a library that is shipped
+with kmod. See libkmod/README for more details on this library and how
+to use it. The aim is to be compatible with tools, configurations and
+indexes from module-init-tools project.
+
+%description -l pl.UTF-8
+kmod to zestaw narzędzi do wykonywania typowych czynności związanych z
+modułami jądra - ładowanie, usuwanie, listowanie, sprawdzanie
+parametrów, rozwiązywanie zależności czy obsługa aliasów.
+
+Narzędzia te zostały stworzone przy użyciu libkmod, biblioteki
+dostarczanej wraz z kmod. Celem jest stworzenie narzędzi
+kompatybilnych z programami, konfiguracją oraz indeksami z projektu
+module-init-tools.
+
+%package devel
+Summary:	Header files for %{name} library
+Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki %{name}
+Group:		Development/Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description devel
+Header files for %{name} library.
+
+%description devel -l pl.UTF-8
+Pliki nagłówkowe biblioteki %{name}.
+
+%prep
+%setup -q
+
+%build
+%{__libtoolize}
+%{__aclocal} -I m4
+%{__autoconf}
+%{__autoheader}
+%{__automake}
+%configure \
+	--with-xz \
+	--with-zlib
+%{__make}
+
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+%{__make} install \
+	pkgconfigdir=%{_pkgconfigdir} \
+	DESTDIR=$RPM_BUILD_ROOT
+
+# install symlinks
+for prog in lsmod rmmod insmod modinfo modprobe depmod; do
+	ln -sf %{_sbindir}/kmod $RPM_BUILD_ROOT%{_sbindir}/$prog
+done
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post	-p /sbin/ldconfig
+%postun	-p /sbin/ldconfig
+
+%files
+%defattr(644,root,root,755)
+%doc NEWS README TODO
+%attr(755,root,root) %{_sbindir}/kmod
+%attr(755,root,root) %{_sbindir}/lsmod
+%attr(755,root,root) %{_sbindir}/rmmod
+%attr(755,root,root) %{_sbindir}/insmod
+%attr(755,root,root) %{_sbindir}/modinfo
+%attr(755,root,root) %{_sbindir}/modprobe
+%attr(755,root,root) %{_sbindir}/depmod
+%{_libdir}/*.so.*
+%{_libdir}/*.so.*.*.*
+
+%files devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/*.so
+%{_includedir}/*.h
+%{_pkgconfigdir}/*.pc
