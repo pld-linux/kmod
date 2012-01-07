@@ -15,9 +15,8 @@ BuildRequires:	xz-devel >= 1:4.99
 BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_bindir		/sbin
-%define		_sbindir	/sbin
-%define		_libdir		/%{_lib}
+%define		_exec_prefix	/
+%define		_bindir			%{_sbindir}
 
 %description
 kmod is a set of tools to handle common tasks with Linux kernel
@@ -65,18 +64,18 @@ Pliki nagłówkowe biblioteki %{name}.
 	--with-zlib
 %{__make}
 
-
 %install
 rm -rf $RPM_BUILD_ROOT
-
 %{__make} install \
 	pkgconfigdir=%{_pkgconfigdir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
 # install symlinks
 for prog in lsmod rmmod insmod modinfo modprobe depmod; do
-	ln -sf %{_sbindir}/kmod $RPM_BUILD_ROOT%{_sbindir}/$prog
+	ln -s kmod $RPM_BUILD_ROOT%{_sbindir}/$prog
 done
+
+rm $RPM_BUILD_ROOT%{_libdir}/libkmod.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -87,6 +86,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc NEWS README TODO
+%attr(755,root,root) %{_libdir}/libkmod.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libkmod.so.1
 %attr(755,root,root) %{_sbindir}/kmod
 %attr(755,root,root) %{_sbindir}/lsmod
 %attr(755,root,root) %{_sbindir}/rmmod
@@ -94,11 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/modinfo
 %attr(755,root,root) %{_sbindir}/modprobe
 %attr(755,root,root) %{_sbindir}/depmod
-%{_libdir}/*.so.*
-%{_libdir}/*.so.*.*.*
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/*.so
-%{_includedir}/*.h
-%{_pkgconfigdir}/*.pc
+%attr(755,root,root) %{_libdir}/libkmod.so
+%{_includedir}/libkmod.h
+%{_pkgconfigdir}/libkmod.pc
