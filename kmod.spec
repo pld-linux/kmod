@@ -4,19 +4,19 @@ Name:		kmod
 Version:	3
 Release:	1
 License:	GPL v2
-Group:		Applications
+Group:		Applications/System
 Source0:	http://packages.profusion.mobi/kmod/%{name}-%{version}.tar.xz
 # Source0-md5:	bc0e69f75c2ac22c091f05e166e86c5d
 URL:		http://git.profusion.mobi/cgit.cgi/kmod.git/
-BuildRequires:	autoconf
-BuildRequires:	automake
-BuildRequires:	libtool
+BuildRequires:	autoconf >= 2.60
+BuildRequires:	automake >= 1:1.11
+BuildRequires:	libtool >= 2:2.0
 BuildRequires:	xz-devel >= 1:4.99
 BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_exec_prefix	/
-%define		_bindir			%{_sbindir}
+%define		_bindir		%{_sbindir}
 
 %description
 kmod is a set of tools to handle common tasks with Linux kernel
@@ -60,6 +60,7 @@ Pliki nagłówkowe biblioteki %{name}.
 %{__autoheader}
 %{__automake}
 %configure \
+	--disable-silent-rules \
 	--with-xz \
 	--with-zlib
 %{__make}
@@ -75,7 +76,7 @@ for prog in lsmod rmmod insmod modinfo modprobe depmod; do
 	ln -s kmod $RPM_BUILD_ROOT%{_sbindir}/$prog
 done
 
-rm $RPM_BUILD_ROOT%{_libdir}/libkmod.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libkmod.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
