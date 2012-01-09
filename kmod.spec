@@ -13,6 +13,8 @@ BuildRequires:	automake >= 1:1.11
 BuildRequires:	libtool >= 2:2.0
 BuildRequires:	xz-devel >= 1:4.99
 BuildRequires:	zlib-devel
+# won't work on older kernels as these do not provide require information in /sys
+Requires:	uname(release) >= 2.6.21
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_exec_prefix	/
