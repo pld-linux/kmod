@@ -7,6 +7,8 @@ License:	GPL v2
 Group:		Applications/System
 Source0:	http://packages.profusion.mobi/kmod/%{name}-%{version}.tar.xz
 # Source0-md5:	e14450a066a48accd0af1995b3c0232d
+Source1:        %{name}-blacklist
+Source2:        %{name}-usb
 URL:		http://git.profusion.mobi/cgit.cgi/kmod.git/
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.11
@@ -70,6 +72,9 @@ Pliki nagłówkowe biblioteki %{name}.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
+install -d $RPM_BUILD_ROOT/etc/modprobe.d
+
 %{__make} install \
 	pkgconfigdir=%{_pkgconfigdir} \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -81,6 +86,11 @@ done
 
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libkmod.la
 
+:> $RPM_BUILD_ROOT/etc/modprobe.d/modprobe.conf
+
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/modprobe.d/blacklist.conf
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/modprobe.d/usb.conf
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -90,6 +100,11 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc NEWS README TODO
+%dir /etc/modprobe.d
+%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/blacklist.conf
+%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/modprobe.conf
+%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/usb.conf
+
 %attr(755,root,root) %{_libdir}/libkmod.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libkmod.so.1
 %attr(755,root,root) %{_sbindir}/kmod
