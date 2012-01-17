@@ -2,8 +2,8 @@ Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
 Version:	4
-Release:	1
-License:	GPL v2
+Release:	2
+License:	GPL v2+
 Group:		Applications/System
 Source0:	http://packages.profusion.mobi/kmod/%{name}-%{version}.tar.xz
 # Source0-md5:	e14450a066a48accd0af1995b3c0232d
@@ -12,9 +12,11 @@ Source2:        %{name}-usb
 URL:		http://git.profusion.mobi/cgit.cgi/kmod.git/
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.11
+BuildRequires:	gtk-doc >= 1.14
 BuildRequires:	libtool >= 2:2.0
 BuildRequires:	xz-devel >= 1:4.99
 BuildRequires:	zlib-devel
+Requires:	%{name}-libs = %{version}-%{release}
 # won't work on older kernels as these do not provide require information in /sys
 Requires:	uname(release) >= 2.6.21
 Obsoletes:	module-init-tools
@@ -43,11 +45,28 @@ dostarczanej wraz z kmod. Celem jest stworzenie narzędzi
 kompatybilnych z programami, konfiguracją oraz indeksami z projektu
 module-init-tools.
 
+%package libs
+Summary:	Linux kernel module handling library
+Summary(pl.UTF-8):	Biblioteka do obsługi modułów jądra Linuksa
+License:	LGPL v2.1+
+Group:		Libraries
+Conflicts:	kmod < 4-1
+
+%description libs
+libkmod was created to allow programs to easily insert, remove and
+list modules, also checking its properties, dependencies and aliases.
+
+%description libs -l pl.UTF-8
+Biblioteka libkmod została zaprojektowana, aby pozwolić programom
+w łatwy sposób ładować, usuwać i listować moduły, także sprawdzając
+ich właściwości, zależności i aliasy.
+
 %package devel
 Summary:	Header files for %{name} library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki %{name}
+License:	LGPL v2.1+
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description devel
 Header files for %{name} library.
@@ -72,7 +91,6 @@ Pliki nagłówkowe biblioteki %{name}.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 install -d $RPM_BUILD_ROOT/etc/modprobe.d
 
 %{__make} install \
@@ -94,8 +112,8 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/modprobe.d/usb.conf
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	-p /sbin/ldconfig
-%postun	-p /sbin/ldconfig
+%post	libs -p /sbin/ldconfig
+%postun	libs -p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
@@ -105,8 +123,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/modprobe.conf
 %attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/usb.conf
 
-%attr(755,root,root) %{_libdir}/libkmod.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libkmod.so.1
 %attr(755,root,root) %{_sbindir}/kmod
 %attr(755,root,root) %{_sbindir}/lsmod
 %attr(755,root,root) %{_sbindir}/rmmod
@@ -124,6 +140,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/modinfo.8*
 %{_mandir}/man8/modprobe.8*
 %{_mandir}/man8/rmmod.8*
+
+%files libs
+%defattr(644,root,root,755)
+%doc libkmod/README
+%attr(755,root,root) %{_libdir}/libkmod.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libkmod.so.1
 
 %files devel
 %defattr(644,root,root,755)
