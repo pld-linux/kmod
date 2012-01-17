@@ -1,12 +1,12 @@
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	3
+Version:	4
 Release:	1
 License:	GPL v2
 Group:		Applications/System
 Source0:	http://packages.profusion.mobi/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	bc0e69f75c2ac22c091f05e166e86c5d
+# Source0-md5:	e14450a066a48accd0af1995b3c0232d
 URL:		http://git.profusion.mobi/cgit.cgi/kmod.git/
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.11
@@ -98,6 +98,16 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/modinfo
 %attr(755,root,root) %{_sbindir}/modprobe
 %attr(755,root,root) %{_sbindir}/depmod
+
+%{_mandir}/man5/depmod.d.5*
+%{_mandir}/man5/modprobe.d.5*
+%{_mandir}/man5/modules.dep.5*
+%{_mandir}/man8/depmod.8*
+%{_mandir}/man8/insmod.8*
+%{_mandir}/man8/lsmod.8*
+%{_mandir}/man8/modinfo.8*
+%{_mandir}/man8/modprobe.8*
+%{_mandir}/man8/rmmod.8*
 
 %files devel
 %defattr(644,root,root,755)
