@@ -2,7 +2,7 @@ Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
 Version:	4
-Release:	2
+Release:	3
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://packages.profusion.mobi/kmod/%{name}-%{version}.tar.xz
@@ -19,6 +19,7 @@ BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{version}-%{release}
 # won't work on older kernels as these do not provide require information in /sys
 Requires:	uname(release) >= 2.6.21
+Provides:	virtual(module-tools)
 Obsoletes:	module-init-tools
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
