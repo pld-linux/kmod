@@ -1,0 +1,1 @@
+- R: uname(release) >= 2.6.21 - won't work with older kernels
