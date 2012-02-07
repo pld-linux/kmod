@@ -1,3 +1,4 @@
+%bcond_without	tests
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
@@ -90,6 +91,8 @@ Pliki nagłówkowe biblioteki %{name}.
 	--with-xz \
 	--with-zlib
 %{__make}
+
+%{?with_tests:%{__make} check}
 
 %install
 rm -rf $RPM_BUILD_ROOT
