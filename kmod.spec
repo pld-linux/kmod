@@ -1,14 +1,14 @@
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	4
-Release:	3
+Version:	5
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://packages.profusion.mobi/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	e14450a066a48accd0af1995b3c0232d
-Source1:        %{name}-blacklist
-Source2:        %{name}-usb
+# Source0-md5:	b271c2ec54aba1c67bda63c8579d8c15
+Source1:	%{name}-blacklist
+Source2:	%{name}-usb
 URL:		http://git.profusion.mobi/cgit.cgi/kmod.git/
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.11
@@ -58,9 +58,9 @@ libkmod was created to allow programs to easily insert, remove and
 list modules, also checking its properties, dependencies and aliases.
 
 %description libs -l pl.UTF-8
-Biblioteka libkmod została zaprojektowana, aby pozwolić programom
-w łatwy sposób ładować, usuwać i listować moduły, także sprawdzając
-ich właściwości, zależności i aliasy.
+Biblioteka libkmod została zaprojektowana, aby pozwolić programom w
+łatwy sposób ładować, usuwać i listować moduły, także sprawdzając ich
+właściwości, zależności i aliasy.
 
 %package devel
 Summary:	Header files for %{name} library
@@ -120,9 +120,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc NEWS README TODO
 %dir /etc/modprobe.d
-%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/blacklist.conf
-%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/modprobe.conf
-%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/usb.conf
+%config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/blacklist.conf
+%config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/modprobe.conf
+%config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/usb.conf
 
 %attr(755,root,root) %{_sbindir}/kmod
 %attr(755,root,root) %{_sbindir}/lsmod
@@ -135,6 +135,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/depmod.d.5*
 %{_mandir}/man5/modprobe.d.5*
 %{_mandir}/man5/modules.dep.5*
+%{_mandir}/man5/modules.dep.bin.5*
 %{_mandir}/man8/depmod.8*
 %{_mandir}/man8/insmod.8*
 %{_mandir}/man8/lsmod.8*
@@ -146,7 +147,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libkmod/README
 %attr(755,root,root) %{_libdir}/libkmod.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libkmod.so.1
+%attr(755,root,root) %ghost %{_libdir}/libkmod.so.2
 
 %files devel
 %defattr(644,root,root,755)
