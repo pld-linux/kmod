@@ -1,3 +1,5 @@
+# TODO:
+# - implement /etc/modprobe.d/kver/ support (just as in our module-init-tools)
 %bcond_without	tests
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
