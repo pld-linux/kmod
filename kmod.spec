@@ -5,13 +5,14 @@ Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
 Version:	5
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://packages.profusion.mobi/kmod/%{name}-%{version}.tar.xz
 # Source0-md5:	b271c2ec54aba1c67bda63c8579d8c15
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
+Patch0:		%{name}-git.patch
 URL:		http://git.profusion.mobi/cgit.cgi/kmod.git/
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.11
@@ -81,6 +82,7 @@ Pliki nagłówkowe biblioteki %{name}.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__libtoolize}
