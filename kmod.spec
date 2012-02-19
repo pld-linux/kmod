@@ -5,7 +5,7 @@ Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
 Version:	5
-Release:	2
+Release:	3
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://packages.profusion.mobi/kmod/%{name}-%{version}.tar.xz
@@ -67,6 +67,19 @@ Biblioteka libkmod została zaprojektowana, aby pozwolić programom w
 łatwy sposób ładować, usuwać i listować moduły, także sprawdzając ich
 właściwości, zależności i aliasy.
 
+%package libs-static
+Summary:	Linux kernel module handling static library
+Summary(pl.UTF-8):	Statyczna biblioteka do obsługi modułów jądra Linuksa
+License:	LGPL v2.1+
+Group:		Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+
+%description libs-static
+Linux kernel module handling static library.
+
+%description libs-static -l pl.UTF-8
+Statyczna biblioteka do obsługi modułów jądra Linuksa.
+
 %package devel
 Summary:	Header files for %{name} library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki %{name}
@@ -91,6 +104,7 @@ Pliki nagłówkowe biblioteki %{name}.
 %{__autoheader}
 %{__automake}
 %configure \
+	--enable-static \
 	--disable-silent-rules \
 	--with-xz \
 	--with-zlib
@@ -111,6 +125,7 @@ for prog in lsmod rmmod insmod modinfo modprobe depmod; do
 	ln -s kmod $RPM_BUILD_ROOT%{_sbindir}/$prog
 done
 
+%{__mv} $RPM_BUILD_ROOT%{_libdir}/libkmod.a $RPM_BUILD_ROOT%{_prefix}/%{_lib}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libkmod.la
 
 :> $RPM_BUILD_ROOT/etc/modprobe.d/modprobe.conf
@@ -156,6 +171,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc libkmod/README
 %attr(755,root,root) %{_libdir}/libkmod.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libkmod.so.2
+
+%files libs-static
+%defattr(644,root,root,755)
+%{_prefix}/%{_lib}/libkmod.a
 
 %files devel
 %defattr(644,root,root,755)
