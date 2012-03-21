@@ -1,5 +1,7 @@
 # TODO:
 # - implement /etc/modprobe.d/kver/ support (just as in our module-init-tools)
+# - modprobe -c prints "option" not "options": sprunge.us/dYCZ
+# - modprobe keeps "-" in module names: sprunge.us/dYCZ
 %bcond_without	tests
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
