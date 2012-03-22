@@ -1,19 +1,20 @@
 # TODO:
 # - implement /etc/modprobe.d/kver/ support (just as in our module-init-tools)
-# - modprobe -c prints "option" not "options": sprunge.us/dYCZ
-# - modprobe keeps "-" in module names: sprunge.us/dYCZ
+# - modprobe keeps "-" in module names: sprunge.us/dYCZ (probably irrelevant)
 %bcond_without	tests
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
 Version:	7
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/System
 Source0:	ftp://ftp.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
 # Source0-md5:	7bd916ae1c8a38e7697fdd8118bc98eb
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
+Patch0:		http://git.kernel.org/?p=utils/kernel/kmod/%{name}.git;a=patch;h=02629fa02e96763db7460a930239cc93649a52f8
+# Patch0-md5:	7693f39dbc1477b7ea63ba9f62857e14
 URL:		http://git.kernel.org/?p=utils/kernel/kmod/kmod.git;a=summary
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.11
@@ -96,6 +97,7 @@ Pliki nagłówkowe biblioteki %{name}.
 
 %prep
 %setup -q
+tail +10 '%{PATCH0}' | %{__patch} -p1
 
 %build
 %{__libtoolize}
