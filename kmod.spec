@@ -15,7 +15,6 @@ Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 # http://git.kernel.org/?p=utils/kernel/kmod/kmod.git;a=patch;h=02629fa02e96763db7460a930239cc93649a52f8
 Patch0:		%{name}-options.patch
-# Patch0-md5:	7693f39dbc1477b7ea63ba9f62857e14
 URL:		http://git.kernel.org/?p=utils/kernel/kmod/kmod.git;a=summary
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.11
