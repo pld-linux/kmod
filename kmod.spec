@@ -6,7 +6,7 @@ Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
 Version:	7
-Release:	3
+Release:	4
 License:	GPL v2+
 Group:		Applications/System
 Source0:	ftp://ftp.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
@@ -98,7 +98,7 @@ Pliki nagłówkowe biblioteki %{name}.
 
 %prep
 %setup -q
-tail +10 '%{PATCH0}' | %{__patch} -p1
+%patch0 -p1
 
 %build
 %{__libtoolize}

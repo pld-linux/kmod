@@ -5,13 +5,6 @@ Subject: [PATCH] modprobe: fix typo in config dump: option->options
 
 kmod uses "option MODNAME", not "options MODNAME"
 
-	--- modprobe-sorted.kmod	2012-03-21 22:31:03.751754042 +0200
-	+++ modprobe-sorted.module-init-tools	2012-03-21 22:30:49.561753089 +0200
-	@@ -1,6 +1,23 @@
-	[...]
-	-option uvesafb mode_option=1024x786-32 mtrr=4 scroll=ywrap
-	+options uvesafb mode_option=1024x786-32 mtrr=4 scroll=ywrap
-
 This breaks scripts that depend in modprobe -c output grepping
 ---
  tools/kmod-modprobe.c |    2 +-
