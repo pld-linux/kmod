@@ -5,16 +5,14 @@
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	7
-Release:	4
+Version:	8
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	ftp://ftp.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	7bd916ae1c8a38e7697fdd8118bc98eb
+# Source0-md5:	d4e3d038b5370b1e8ff237c55666aa64
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
-# http://git.kernel.org/?p=utils/kernel/kmod/kmod.git;a=patch;h=02629fa02e96763db7460a930239cc93649a52f8
-Patch0:		%{name}-options.patch
 URL:		http://git.kernel.org/?p=utils/kernel/kmod/kmod.git;a=summary
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.11
@@ -97,7 +95,6 @@ Pliki nagłówkowe biblioteki %{name}.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %{__libtoolize}
