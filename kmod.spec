@@ -1,16 +1,19 @@
 # TODO:
 # - implement /etc/modprobe.d/kver/ support (just as in our module-init-tools)
 # - modprobe keeps "-" in module names: sprunge.us/dYCZ (probably irrelevant)
-%bcond_without	tests
+#
+# Conditional build:
+%bcond_with	tests	# perform "make check" (init_module seems to require root for mkdir)
+#
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	8
+Version:	9
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	ftp://ftp.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	d4e3d038b5370b1e8ff237c55666aa64
+# Source0-md5:	c8ae2d2694fbca2b28e238b30543a0cd
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 URL:		http://git.kernel.org/?p=utils/kernel/kmod/kmod.git;a=summary
