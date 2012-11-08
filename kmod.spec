@@ -3,7 +3,7 @@
 # - modprobe keeps "-" in module names: sprunge.us/dYCZ (probably irrelevant)
 #
 # Conditional build:
-%bcond_with	tests	# perform "make check" (init_module seems to require root for mkdir)
+%bcond_without	tests	# perform "make check" (init_module seems to require root for mkdir)
 #
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
@@ -98,6 +98,9 @@ Pliki nagłówkowe biblioteki %{name}.
 
 %prep
 %setup -q
+
+# requires root to work
+sed -i -e 's# testsuite/test-modprobe # #g' Makefile.am
 
 %build
 %{__libtoolize}
