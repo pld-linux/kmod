@@ -22,6 +22,8 @@ BuildRequires:	automake >= 1:1.11
 BuildRequires:	gtk-doc >= 1.14
 BuildRequires:	libtool >= 2:2.0
 BuildRequires:	pkgconfig
+BuildRequires:	tar >= 1:1.22
+BuildRequires:	xz
 BuildRequires:	xz-devel >= 1:4.99
 BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{version}-%{release}
