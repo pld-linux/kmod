@@ -1,7 +1,3 @@
-# TODO:
-# - implement /etc/modprobe.d/kver/ support (just as in our module-init-tools)
-# - modprobe keeps "-" in module names: sprunge.us/dYCZ (probably irrelevant)
-#
 # Conditional build:
 %bcond_without	tests	# perform "make check" (init_module seems to require root for mkdir)
 #
@@ -9,13 +5,14 @@ Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
 Version:	12
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/System
 Source0:	ftp://ftp.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
 # Source0-md5:	3d63b146c8ee5a04dfbef4be97f8226b
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
+Patch0:		%{name}-modprobe.d-kver.patch
 URL:		http://git.kernel.org/?p=utils/kernel/kmod/kmod.git;a=summary
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.11
@@ -100,6 +97,7 @@ Pliki nagłówkowe biblioteki %{name}.
 
 %prep
 %setup -q
+%patch0 -p1
 
 # requires root to work
 sed -i -e 's# testsuite/test-modprobe # #g' Makefile.am
