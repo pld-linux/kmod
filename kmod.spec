@@ -5,7 +5,7 @@ Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
 Version:	12
-Release:	2
+Release:	3
 License:	GPL v2+
 Group:		Applications/System
 Source0:	ftp://ftp.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
@@ -27,7 +27,8 @@ Requires:	%{name}-libs = %{version}-%{release}
 # won't work on older kernels as these do not provide require information in /sys
 Requires:	uname(release) >= 2.6.21
 Provides:	virtual(module-tools)
-Obsoletes:	module-init-tools
+Provides:	module-init-tools = 4.0
+Obsoletes:	module-init-tools < 4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_exec_prefix	/
