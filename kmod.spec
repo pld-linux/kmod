@@ -31,8 +31,7 @@ Provides:	module-init-tools = 4.0
 Obsoletes:	module-init-tools < 4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_exec_prefix	/
-%define		_bindir		%{_sbindir}
+%define		_bindir		/sbin
 
 %description
 kmod is a set of tools to handle common tasks with Linux kernel
@@ -112,6 +111,7 @@ sed -i -e 's# testsuite/test-modprobe # #g' Makefile.am
 %configure \
 	--enable-static \
 	--disable-silent-rules \
+	--with-rootlibdir=/%{_lib} \
 	--with-xz \
 	--with-zlib
 %{__make}
@@ -128,10 +128,10 @@ install -d $RPM_BUILD_ROOT/etc/modprobe.d
 
 # install symlinks
 for prog in lsmod rmmod insmod modinfo modprobe depmod; do
-	ln -s kmod $RPM_BUILD_ROOT%{_sbindir}/$prog
+	ln -s kmod $RPM_BUILD_ROOT%{_bindir}/$prog
 done
 
-%{__mv} $RPM_BUILD_ROOT%{_libdir}/libkmod.a $RPM_BUILD_ROOT%{_prefix}/%{_lib}
+# obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libkmod.la
 
 :> $RPM_BUILD_ROOT/etc/modprobe.d/modprobe.conf
@@ -153,13 +153,13 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/modprobe.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/usb.conf
 
-%attr(755,root,root) %{_sbindir}/kmod
-%attr(755,root,root) %{_sbindir}/lsmod
-%attr(755,root,root) %{_sbindir}/rmmod
-%attr(755,root,root) %{_sbindir}/insmod
-%attr(755,root,root) %{_sbindir}/modinfo
-%attr(755,root,root) %{_sbindir}/modprobe
-%attr(755,root,root) %{_sbindir}/depmod
+%attr(755,root,root) %{_bindir}/kmod
+%attr(755,root,root) %{_bindir}/lsmod
+%attr(755,root,root) %{_bindir}/rmmod
+%attr(755,root,root) %{_bindir}/insmod
+%attr(755,root,root) %{_bindir}/modinfo
+%attr(755,root,root) %{_bindir}/modprobe
+%attr(755,root,root) %{_bindir}/depmod
 
 %{_mandir}/man5/depmod.d.5*
 %{_mandir}/man5/modprobe.d.5*
@@ -175,12 +175,12 @@ rm -rf $RPM_BUILD_ROOT
 %files libs
 %defattr(644,root,root,755)
 %doc libkmod/README
-%attr(755,root,root) %{_libdir}/libkmod.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libkmod.so.2
+%attr(755,root,root) /%{_lib}/libkmod.so.*.*.*
+%attr(755,root,root) %ghost /%{_lib}/libkmod.so.2
 
 %files libs-static
 %defattr(644,root,root,755)
-%{_prefix}/%{_lib}/libkmod.a
+%{_libdir}/libkmod.a
 
 %files devel
 %defattr(644,root,root,755)
