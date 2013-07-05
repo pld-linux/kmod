@@ -4,12 +4,12 @@
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	13
-Release:	2
+Version:	14
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	ftp://ftp.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	d5aba43b9370cd52f3cb35e82a1aa595
+# Source0-md5:	38009d0d6f10678a3ec22ccd29210d13
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
@@ -69,25 +69,13 @@ Biblioteka libkmod została zaprojektowana, aby pozwolić programom w
 łatwy sposób ładować, usuwać i listować moduły, także sprawdzając ich
 właściwości, zależności i aliasy.
 
-%package libs-static
-Summary:	Linux kernel module handling static library
-Summary(pl.UTF-8):	Statyczna biblioteka do obsługi modułów jądra Linuksa
-License:	LGPL v2.1+
-Group:		Libraries
-Requires:	%{name}-devel = %{version}-%{release}
-
-%description libs-static
-Linux kernel module handling static library.
-
-%description libs-static -l pl.UTF-8
-Statyczna biblioteka do obsługi modułów jądra Linuksa.
-
 %package devel
 Summary:	Header files for %{name} library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki %{name}
 License:	LGPL v2.1+
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
+Obsoletes:	kmod-libs-static
 
 %description devel
 Header files for %{name} library.
@@ -109,7 +97,6 @@ sed -i -e 's# testsuite/test-modprobe # #g' Makefile.am
 %{__autoheader}
 %{__automake}
 %configure \
-	--enable-static \
 	--disable-silent-rules \
 	--with-rootlibdir=/%{_lib} \
 	--with-xz \
@@ -177,10 +164,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc libkmod/README
 %attr(755,root,root) /%{_lib}/libkmod.so.*.*.*
 %attr(755,root,root) %ghost /%{_lib}/libkmod.so.2
-
-%files libs-static
-%defattr(644,root,root,755)
-%{_libdir}/libkmod.a
 
 %files devel
 %defattr(644,root,root,755)
