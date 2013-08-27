@@ -4,12 +4,12 @@
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	14
-Release:	2
+Version:	15
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
-Source0:	ftp://ftp.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	38009d0d6f10678a3ec22ccd29210d13
+Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
+# Source0-md5:	d03372179ed2cfa0c52b6672cf438901
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
@@ -82,6 +82,18 @@ Header files for %{name} library.
 
 %description devel -l pl.UTF-8
 Pliki nagłówkowe biblioteki %{name}.
+
+%package -n bash-completion-kmod
+Summary:	bash-completion for kmod utilities
+Summary(pl.UTF-8):	Bashowe uzupełnianie nazw dla narzędzi kmod
+Group:		Applications/Shells
+Requires:	bash-completion >= 2.0
+
+%description -n bash-completion-kmod
+bash-completion for kmod utilities.
+
+%description -n bash-completion-kmod -l pl.UTF-8
+Bashowe uzupełnianie nazw dla narzędzi kmod.
 
 %prep
 %setup -q
@@ -170,3 +182,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkmod.so
 %{_includedir}/libkmod.h
 %{_pkgconfigdir}/libkmod.pc
+
+%files -n bash-completion-kmod
+%defattr(644,root,root,755)
+%{_datadir}/bash-completion/completions/kmod
