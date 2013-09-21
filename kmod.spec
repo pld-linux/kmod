@@ -176,12 +176,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libs
 %defattr(644,root,root,755)
-%doc libkmod/README
 %attr(755,root,root) /%{_lib}/libkmod.so.*.*.*
 %attr(755,root,root) %ghost /%{_lib}/libkmod.so.2
 
 %files devel
 %defattr(644,root,root,755)
+%doc libkmod/README
 %attr(755,root,root) %{_libdir}/libkmod.so
 %{_includedir}/libkmod.h
 %{_pkgconfigdir}/libkmod.pc
