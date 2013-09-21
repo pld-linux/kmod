@@ -1,3 +1,6 @@
+# TODO
+# - alias from /etc/modprobe.d/3.4.32.longterm-1/geninitrd.conf does not work for geninitrd
+#
 # Conditional build:
 %bcond_without	tests	# perform "make check" (init_module seems to require root for mkdir)
 #
