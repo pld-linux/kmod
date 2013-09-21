@@ -1,9 +1,12 @@
 # TODO
 # - alias from /etc/modprobe.d/3.4.32.longterm-1/geninitrd.conf does not work for geninitrd
+# - kmod no longer links with library dynamically since kmod-15:
+#   kmod binary statically links to libkmod - if distro is only interested in
+#   the kmod tool (for example in an initrd) it can refrain from installing the library
 #
 # Conditional build:
 %bcond_without	tests	# perform "make check" (init_module seems to require root for mkdir)
-#
+
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
