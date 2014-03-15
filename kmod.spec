@@ -94,6 +94,9 @@ Summary:	bash-completion for kmod utilities
 Summary(pl.UTF-8):	Bashowe uzupełnianie nazw dla narzędzi kmod
 Group:		Applications/Shells
 Requires:	bash-completion >= 2.0
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description -n bash-completion-kmod
 bash-completion for kmod utilities.
