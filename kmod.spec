@@ -32,7 +32,6 @@ BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 BuildRequires:	xz-devel >= 1:4.99
 BuildRequires:	zlib-devel
-Requires:	%{name}-libs = %{version}-%{release}
 # won't work on older kernels as these do not provide require information in /sys
 Requires:	uname(release) >= 2.6.21
 Provides:	module-init-tools = 4.0
