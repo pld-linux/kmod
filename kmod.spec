@@ -27,6 +27,7 @@ BuildRequires:	libtool >= 2:2.0
 BuildRequires:	pkgconfig
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 BuildRequires:	xz-devel >= 1:4.99
@@ -110,8 +111,7 @@ Bashowe uzupełnianie nazw dla narzędzi kmod.
 Summary:	kmod Python bindings
 Summary(pl.UTF-8):	Dowiązania do kmod dla Pythona
 Group:		Development/Languages/Python
-Requires:	%{name} = %{version}-%{release}
-Requires:	python
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description -n python-kmod
 kmod Python bindings.
@@ -156,6 +156,10 @@ done
 
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libkmod.la
+
+# not needed in python module
+%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/kmod/*.la
+%py_postclean
 
 :> $RPM_BUILD_ROOT/etc/modprobe.d/modprobe.conf
 
@@ -215,4 +219,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %dir %{py_sitedir}/kmod
 %attr(755,root,root) %{py_sitedir}/kmod/*.so
-%{py_sitedir}/kmod/*.py*
+%{py_sitedir}/kmod/*.py[co]
