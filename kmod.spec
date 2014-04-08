@@ -34,8 +34,8 @@ BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{version}-%{release}
 # won't work on older kernels as these do not provide require information in /sys
 Requires:	uname(release) >= 2.6.21
-Provides:	virtual(module-tools)
 Provides:	module-init-tools = 4.0
+Provides:	virtual(module-tools)
 Obsoletes:	module-init-tools < 4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -110,7 +110,7 @@ Bashowe uzupełnianie nazw dla narzędzi kmod.
 Summary:	kmod Python bindings
 Summary(pl.UTF-8):	Dowiązania do kmod dla Pythona
 Group:		Development/Languages/Python
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	python
 
 %description -n python-kmod
@@ -145,7 +145,6 @@ sed -i -e 's# testsuite/test-modprobe # #g' Makefile.am
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/modprobe.d
-
 %{__make} install \
 	pkgconfigdir=%{_pkgconfigdir} \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -160,8 +159,8 @@ done
 
 :> $RPM_BUILD_ROOT/etc/modprobe.d/modprobe.conf
 
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/modprobe.d/blacklist.conf
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/modprobe.d/usb.conf
+cp -p %{SOURCE1} $RPM_BUILD_ROOT/etc/modprobe.d/blacklist.conf
+cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/modprobe.d/usb.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
