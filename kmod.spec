@@ -10,12 +10,12 @@
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	16
+Version:	17
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	3006a0287211212501cdfe1211b29f09
+# Source0-md5:	bc36d28b12dcb2b664a35411560c5610
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
@@ -25,6 +25,8 @@ BuildRequires:	automake >= 1:1.11
 BuildRequires:	gtk-doc >= 1.14
 BuildRequires:	libtool >= 2:2.0
 BuildRequires:	pkgconfig
+BuildRequires:	python-devel
+BuildRequires:	rpm-pythonprov
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 BuildRequires:	xz-devel >= 1:4.99
@@ -104,6 +106,19 @@ bash-completion for kmod utilities.
 %description -n bash-completion-kmod -l pl.UTF-8
 Bashowe uzupełnianie nazw dla narzędzi kmod.
 
+%package -n python-kmod
+Summary:	kmod Python bindings
+Summary(pl.UTF-8):	Dowiązania do kmod dla Pythona
+Group:		Development/Languages/Python
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	python
+
+%description -n python-kmod
+kmod Python bindings.
+
+%description -n python-kmod -l pl.UTF-8
+Dowiązania do kmod dla Pythona.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -119,6 +134,7 @@ sed -i -e 's# testsuite/test-modprobe # #g' Makefile.am
 %{__automake}
 %configure \
 	--disable-silent-rules \
+	--enable-python \
 	--with-rootlibdir=/%{_lib} \
 	--with-xz \
 	--with-zlib
@@ -195,3 +211,9 @@ rm -rf $RPM_BUILD_ROOT
 %files -n bash-completion-kmod
 %defattr(644,root,root,755)
 %{_datadir}/bash-completion/completions/kmod
+
+%files -n python-kmod
+%defattr(644,root,root,755)
+%dir %{py_sitedir}/kmod
+%attr(755,root,root) %{py_sitedir}/kmod/*.so
+%{py_sitedir}/kmod/*.py*
