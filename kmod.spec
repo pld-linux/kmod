@@ -107,16 +107,17 @@ bash-completion for kmod utilities.
 Bashowe uzupełnianie nazw dla narzędzi kmod.
 
 %package -n python-kmod
-Summary:	kmod Python bindings
-Summary(pl.UTF-8):	Dowiązania do kmod dla Pythona
+Summary:	Python binding for kmod API
+Summary(pl.UTF-8):	Wiązania Pythona do API kmod
+License:	LGPL v2.1+
 Group:		Development/Languages/Python
 Requires:	%{name}-libs = %{version}-%{release}
 
 %description -n python-kmod
-kmod Python bindings.
+Python binding for kmod API.
 
 %description -n python-kmod -l pl.UTF-8
-Dowiązania do kmod dla Pythona.
+Wiązania Pythona do API kmod.
 
 %prep
 %setup -q
