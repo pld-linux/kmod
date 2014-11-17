@@ -10,12 +10,12 @@
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	18
+Version:	19
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	82835c7f01983634e06ca72b4ee30cc6
+# Source0-md5:	a08643f814aa4efc12211c6e5909f4d9
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
@@ -194,6 +194,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/modules.dep.bin.5*
 %{_mandir}/man8/depmod.8*
 %{_mandir}/man8/insmod.8*
+%{_mandir}/man8/kmod.8*
 %{_mandir}/man8/lsmod.8*
 %{_mandir}/man8/modinfo.8*
 %{_mandir}/man8/modprobe.8*
