@@ -124,7 +124,7 @@ Wiązania Pythona do API kmod.
 %patch0 -p1
 
 # requires root to work
-sed -i -e 's# testsuite/test-modprobe # #g' Makefile.am
+sed -i -e 's#testsuite/test-modprobe# #g' Makefile.am
 
 %build
 %{__libtoolize}
