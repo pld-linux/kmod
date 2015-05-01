@@ -23,6 +23,7 @@ URL:		http://git.kernel.org/?p=utils/kernel/kmod/kmod.git;a=summary
 BuildRequires:	autoconf >= 2.60
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	gtk-doc >= 1.14
+BuildRequires:	kernel-module-build
 BuildRequires:	libtool >= 2:2.0
 BuildRequires:	pkgconfig
 BuildRequires:	python-devel
@@ -140,7 +141,7 @@ sed -i -e 's#testsuite/test-modprobe# #g' Makefile.am
 	--with-zlib
 %{__make}
 
-%{?with_tests:%{__make} check}
+%{?with_tests:%{__make} check KDIR=%{_kernelsrcdir} KVER=%{_kernel_ver}}
 
 %install
 rm -rf $RPM_BUILD_ROOT
