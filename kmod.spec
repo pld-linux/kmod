@@ -10,12 +10,12 @@
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	20
-Release:	2
+Version:	21
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	d6f4fef718a50bd88080de6a43bc64d8
+# Source0-md5:	ee246fab2e1cba9fbdcad6a86ec31531
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
@@ -124,9 +124,6 @@ Wiązania Pythona do API kmod.
 %setup -q
 %patch0 -p1
 
-# requires root to work
-sed -i -e 's#testsuite/test-modprobe# #g' Makefile.am
-
 %build
 %{__libtoolize}
 %{__aclocal} -I m4
@@ -135,6 +132,7 @@ sed -i -e 's#testsuite/test-modprobe# #g' Makefile.am
 %{__automake}
 %configure \
 	--disable-silent-rules \
+	--disable-test-modules \
 	--enable-python \
 	--with-rootlibdir=/%{_lib} \
 	--with-xz \
