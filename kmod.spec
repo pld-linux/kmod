@@ -10,12 +10,12 @@
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	21
+Version:	22
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	ee246fab2e1cba9fbdcad6a86ec31531
+# Source0-md5:	4371b847f3fbfaa4e9aa890ad616748f
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
