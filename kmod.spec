@@ -5,13 +5,14 @@
 #   the kmod tool (for example in an initrd) it can refrain from installing the library
 #
 # Conditional build:
+%bcond_without	python3	# CPython 3.x module
 %bcond_without	tests	# perform "make check" (init_module seems to require root for mkdir)
 
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
 Version:	25
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
@@ -19,20 +20,22 @@ Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.t
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
-URL:		http://git.kernel.org/?p=utils/kernel/kmod/kmod.git;a=summary
-BuildRequires:	autoconf >= 2.60
+URL:		https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git
+BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	gtk-doc >= 1.14
 BuildRequires:	kernel-module-build
 BuildRequires:	libtool >= 2:2.0
 BuildRequires:	pkgconfig
-BuildRequires:	python-devel
+BuildRequires:	python-devel >= 1:2.6
+%{?with_python3:BuildRequires:	python3-devel >= 1:3.3}
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 BuildRequires:	xz-devel >= 1:4.99
 BuildRequires:	zlib-devel
+Requires:	filesystem >= 4.0-24
 # won't work on older kernels as these do not provide require information in /sys
 Requires:	uname(release) >= 2.6.21
 Provides:	module-init-tools = 4.0
@@ -108,17 +111,30 @@ bash-completion for kmod utilities.
 Bashowe uzupełnianie nazw dla narzędzi kmod.
 
 %package -n python-kmod
-Summary:	Python binding for kmod API
-Summary(pl.UTF-8):	Wiązania Pythona do API kmod
+Summary:	Python 2 binding for kmod API
+Summary(pl.UTF-8):	Wiązania Pythona 2 do API kmod
 License:	LGPL v2.1+
 Group:		Development/Languages/Python
 Requires:	%{name}-libs = %{version}-%{release}
 
 %description -n python-kmod
-Python binding for kmod API.
+Python 2 binding for kmod API.
 
 %description -n python-kmod -l pl.UTF-8
-Wiązania Pythona do API kmod.
+Wiązania Pythona 2 do API kmod.
+
+%package -n python3-kmod
+Summary:	Python 3 binding for kmod API
+Summary(pl.UTF-8):	Wiązania Pythona 3 do API kmod
+License:	LGPL v2.1+
+Group:		Development/Languages/Python
+Requires:	%{name}-libs = %{version}-%{release}
+
+%description -n python3-kmod
+Python 3 binding for kmod API.
+
+%description -n python3-kmod -l pl.UTF-8
+Wiązania Pythona 3 do API kmod.
 
 %prep
 %setup -q
@@ -130,7 +146,10 @@ Wiązania Pythona do API kmod.
 %{__autoconf}
 %{__autoheader}
 %{__automake}
-%configure \
+
+install -d build
+cd build
+../%configure \
 	--disable-silent-rules \
 	--disable-test-modules \
 	--enable-python \
@@ -138,14 +157,39 @@ Wiązania Pythona do API kmod.
 	--with-xz \
 	--with-zlib
 %{__make}
+cd ..
 
-%{?with_tests:%{__make} check KDIR=%{_kernelsrcdir} KVER=%{_kernel_ver}}
+%if %{with python3}
+install -d build-py3
+cd build-py3
+../%configure \
+	PYTHON=%{__python3} \
+	--disable-silent-rules \
+	--disable-test-modules \
+	--enable-python \
+	--with-rootlibdir=/%{_lib} \
+	--with-xz \
+	--with-zlib
+%{__make}
+cd ..
+%endif
+
+%if %{with tests}
+%{__make} -C build check \
+	KDIR=%{_kernelsrcdir} \
+	KVER=%{_kernel_ver}
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/modprobe.d
-%{__make} install \
-	pkgconfigdir=%{_pkgconfigdir} \
+install -d $RPM_BUILD_ROOT{/etc,/lib}/modprobe.d
+
+%if %{with python3}
+%{__make} -C build-py3 install \
+	DESTDIR=$RPM_BUILD_ROOT
+%endif
+
+%{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 # install symlinks
@@ -159,6 +203,9 @@ done
 # not needed in python module
 %{__rm} $RPM_BUILD_ROOT%{py_sitedir}/kmod/*.la
 %py_postclean
+%if %{with python3}
+%{__rm} $RPM_BUILD_ROOT%{py3_sitedir}/kmod/*.la
+%endif
 
 :> $RPM_BUILD_ROOT/etc/modprobe.d/modprobe.conf
 
@@ -174,10 +221,11 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc NEWS README TODO
-%dir /etc/modprobe.d
 %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/blacklist.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/modprobe.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/usb.conf
+
+%dir /lib/modprobe.d
 
 %attr(755,root,root) %{_bindir}/kmod
 %attr(755,root,root) %{_bindir}/lsmod
@@ -220,3 +268,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_sitedir}/kmod
 %attr(755,root,root) %{py_sitedir}/kmod/*.so
 %{py_sitedir}/kmod/*.py[co]
+
+%if %{with python3}
+%files -n python3-kmod
+%defattr(644,root,root,755)
+%dir %{py3_sitedir}/kmod
+%attr(755,root,root) %{py3_sitedir}/kmod/*.so
+%{py3_sitedir}/kmod/*.py
+%{py3_sitedir}/kmod/__pycache__
+%endif
