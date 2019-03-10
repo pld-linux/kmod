@@ -5,18 +5,19 @@
 #   the kmod tool (for example in an initrd) it can refrain from installing the library
 #
 # Conditional build:
+%bcond_without	openssl	# OpenSSL support for PKCS7 signatures in modinfo
 %bcond_without	python3	# CPython 3.x module
 %bcond_without	tests	# perform "make check" (init_module seems to require root for mkdir)
 
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	25
-Release:	3
+Version:	26
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	34f325cab568f842fdde4f8b2182f220
+# Source0-md5:	1129c243199bdd7db01b55a61aa19601
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
@@ -26,6 +27,7 @@ BuildRequires:	automake >= 1:1.11
 BuildRequires:	gtk-doc >= 1.14
 BuildRequires:	kernel-module-build
 BuildRequires:	libtool >= 2:2.0
+%{?with_openssl:BuildRequires:	openssl-devel >= 1.1.0}
 BuildRequires:	pkgconfig
 BuildRequires:	python-devel >= 1:2.6
 %{?with_python3:BuildRequires:	python3-devel >= 1:3.3}
@@ -153,6 +155,7 @@ cd build
 	--disable-silent-rules \
 	--disable-test-modules \
 	--enable-python \
+	%{?with_openssl:--with-openssl} \
 	--with-rootlibdir=/%{_lib} \
 	--with-xz \
 	--with-zlib
