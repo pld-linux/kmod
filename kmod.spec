@@ -13,7 +13,7 @@ Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
 Version:	26
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
@@ -185,7 +185,7 @@ cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/etc,/lib}/modprobe.d
+install -d $RPM_BUILD_ROOT{/etc,/lib}/{depmod.d,modprobe.d}
 
 %if %{with python3}
 %{__make} -C build-py3 install \
@@ -228,6 +228,8 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/modprobe.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/usb.conf
 
+%dir /etc/depmod.d
+%dir /lib/depmod.d
 %dir /lib/modprobe.d
 
 %attr(755,root,root) %{_bindir}/kmod
