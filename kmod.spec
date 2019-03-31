@@ -21,6 +21,7 @@ Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.t
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
+Patch1:		%{name}-depmod.d-kver.patch
 URL:		https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
@@ -141,6 +142,7 @@ Wiązania Pythona 3 do API kmod.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 %{__libtoolize}

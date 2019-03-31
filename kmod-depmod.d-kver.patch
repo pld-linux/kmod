@@ -1,0 +1,31 @@
+--- kmod-26/tools/depmod.c.orig	2019-03-31 13:50:56.277614760 +0200
++++ kmod-26/tools/depmod.c	2019-03-31 13:53:23.093456646 +0200
+@@ -50,7 +50,9 @@
+ 
+ static const char CFG_BUILTIN_KEY[] = "built-in";
+ static const char CFG_EXTERNAL_KEY[] = "external";
++static char kver_config_path[PATH_MAX] = SYSCONFDIR "/depmod.d/X.Y.Z";
+ static const char *default_cfg_paths[] = {
++	kver_config_path,
+ 	"/run/depmod.d",
+ 	SYSCONFDIR "/depmod.d",
+ 	"/lib/depmod.d",
+@@ -815,8 +817,16 @@
+ 	size_t i, n_files = 0;
+ 	struct cfg_file **files = NULL;
+ 
+-	if (cfg_paths == NULL)
+-		cfg_paths = default_cfg_paths;
++	if (cfg_paths == NULL) {
++		struct utsname u;
++
++		if (uname(&u) < 0) {
++			cfg_paths = &default_cfg_paths[1];
++		} else {
++			snprintf(kver_config_path, PATH_MAX, SYSCONFDIR "/depmod.d/%s", u.release);
++			cfg_paths = default_cfg_paths;
++		}
++	}
+ 
+ 	for (i = 0; cfg_paths[i] != NULL; i++)
+ 		cfg_files_list(&files, &n_files, cfg_paths[i]);
