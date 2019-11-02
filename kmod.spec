@@ -13,7 +13,7 @@ Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
 Version:	26
-Release:	3
+Release:	4
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
@@ -22,6 +22,7 @@ Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
 Patch1:		%{name}-depmod.d-kver.patch
+Patch2:		python-3.8.patch
 URL:		https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
@@ -143,6 +144,7 @@ Wiązania Pythona 3 do API kmod.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %{__libtoolize}
