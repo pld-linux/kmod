@@ -26,7 +26,9 @@ URL:		https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	gtk-doc >= 1.14
+%if %{with tests}
 BuildRequires:	kernel-module-build
+%endif
 BuildRequires:	libtool >= 2:2.0
 %{?with_openssl:BuildRequires:	openssl-devel >= 1.1.0}
 BuildRequires:	pkgconfig
