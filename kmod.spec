@@ -6,6 +6,7 @@
 #
 # Conditional build:
 %bcond_without	openssl	# OpenSSL support for PKCS7 signatures in modinfo
+%bcond_without	python2	# CPython 2.x module
 %bcond_without	python3	# CPython 3.x module
 %bcond_without	tests	# perform "make check" (init_module seems to require root for mkdir)
 
@@ -32,9 +33,11 @@ BuildRequires:	kernel-module-build
 BuildRequires:	libtool >= 2:2.0
 %{?with_openssl:BuildRequires:	openssl-devel >= 1.1.0}
 BuildRequires:	pkgconfig
-BuildRequires:	python-devel >= 1:2.6
+%{?with_python2:BuildRequires:	python-devel >= 1:2.6}
 %{?with_python3:BuildRequires:	python3-devel >= 1:3.3}
+%if %{with python2} || %{with python3}
 BuildRequires:	rpm-pythonprov
+%endif
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
@@ -158,7 +161,7 @@ cd build
 ../%configure \
 	--disable-silent-rules \
 	--disable-test-modules \
-	--enable-python \
+	%{?with_python2:--enable-python} \
 	%{?with_openssl:--with-openssl} \
 	--with-rootlibdir=/%{_lib} \
 	--with-xz \
@@ -207,9 +210,11 @@ done
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libkmod.la
 
+%if %{with python2}
 # not needed in python module
 %{__rm} $RPM_BUILD_ROOT%{py_sitedir}/kmod/*.la
 %py_postclean
+%endif
 %if %{with python3}
 %{__rm} $RPM_BUILD_ROOT%{py3_sitedir}/kmod/*.la
 %endif
@@ -272,11 +277,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_datadir}/bash-completion/completions/kmod
 
+%if %{with python2}
 %files -n python-kmod
 %defattr(644,root,root,755)
 %dir %{py_sitedir}/kmod
 %attr(755,root,root) %{py_sitedir}/kmod/*.so
 %{py_sitedir}/kmod/*.py[co]
+%endif
 
 %if %{with python3}
 %files -n python3-kmod
