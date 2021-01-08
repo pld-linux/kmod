@@ -13,12 +13,12 @@
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	27
+Version:	28
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	3973a74786670d3062d89a827e266581
+# Source0-md5:	0a2b887b1b3dfb8c0b3f41f598203e56
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
@@ -43,9 +43,11 @@ BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 BuildRequires:	xz-devel >= 1:4.99
 BuildRequires:	zlib-devel
+BuildRequires:	zstd-devel >= 1.4.4
 Requires:	filesystem >= 4.0-24
 # won't work on older kernels as these do not provide require information in /sys
 Requires:	uname(release) >= 2.6.21
+Requires:	zstd >= 1.4.4
 Provides:	module-init-tools = 4.0
 Provides:	virtual(module-tools)
 Obsoletes:	module-init-tools < 4.0
@@ -78,6 +80,7 @@ Summary:	Linux kernel module handling library
 Summary(pl.UTF-8):	Biblioteka do obsługi modułów jądra Linuksa
 License:	LGPL v2.1+
 Group:		Libraries
+Requires:	zstd >= 1.4.4
 Conflicts:	kmod < 4-1
 
 %description libs
@@ -165,7 +168,8 @@ cd build
 	%{?with_openssl:--with-openssl} \
 	--with-rootlibdir=/%{_lib} \
 	--with-xz \
-	--with-zlib
+	--with-zlib \
+	--with-zstd
 %{__make}
 cd ..
 
@@ -179,7 +183,8 @@ cd build-py3
 	--enable-python \
 	--with-rootlibdir=/%{_lib} \
 	--with-xz \
-	--with-zlib
+	--with-zlib \
+	--with-zstd
 %{__make}
 cd ..
 %endif
