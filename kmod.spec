@@ -38,7 +38,7 @@ BuildRequires:	pkgconfig
 %if %{with python2} || %{with python3}
 BuildRequires:	rpm-pythonprov
 %endif
-BuildRequires:	rpmbuild(macros) >= 1.219
+BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 BuildRequires:	xz-devel >= 1:4.99
@@ -111,9 +111,7 @@ Summary:	bash-completion for kmod utilities
 Summary(pl.UTF-8):	Bashowe uzupełnianie nazw dla narzędzi kmod
 Group:		Applications/Shells
 Requires:	bash-completion >= 2.0
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description -n bash-completion-kmod
 bash-completion for kmod utilities.
