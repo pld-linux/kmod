@@ -8,6 +8,7 @@
 %bcond_without	openssl	# OpenSSL support for PKCS7 signatures in modinfo
 %bcond_without	python2	# CPython 2.x module
 %bcond_without	python3	# CPython 3.x module
+%bcond_with	docs	# Docs
 %bcond_without	tests	# perform "make check" (init_module seems to require root for mkdir)
 
 Summary:	Linux kernel module handling
@@ -26,7 +27,7 @@ Patch1:		%{name}-depmod.d-kver.patch
 URL:		https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
-BuildRequires:	gtk-doc >= 1.14
+%{?with_docs:BuildRequires:	gtk-doc >= 1.14}
 %if %{with tests}
 BuildRequires:	kernel-module-build
 %endif
@@ -162,6 +163,7 @@ cd build
 ../%configure \
 	--disable-silent-rules \
 	--disable-test-modules \
+	%{?with_docs:--enable-gtk-doc} \
 	%{?with_python2:--enable-python} \
 	%{?with_openssl:--with-openssl} \
 	--with-rootlibdir=/%{_lib} \
