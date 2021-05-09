@@ -36,6 +36,7 @@ BuildRequires:	libtool >= 2:2.0
 BuildRequires:	pkgconfig
 %{?with_python2:BuildRequires:	python-devel >= 1:2.6}
 %{?with_python3:BuildRequires:	python3-devel >= 1:3.3}
+BuildRequires:	rpm-build >= 4.6
 %if %{with python2} || %{with python3}
 BuildRequires:	rpm-pythonprov
 %endif
@@ -99,7 +100,7 @@ Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki %{name}
 License:	LGPL v2.1+
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
-Obsoletes:	kmod-libs-static
+Obsoletes:	kmod-libs-static < 14
 
 %description devel
 Header files for %{name} library.
