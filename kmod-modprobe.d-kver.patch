@@ -10,7 +10,7 @@ diff -ur kmod-12/libkmod/libkmod.c kmod-12-modprobe.d-kver/libkmod/libkmod.c
 +	kver_config_path,
  	SYSCONFDIR "/modprobe.d",
  	"/run/modprobe.d",
- 	"/lib/modprobe.d",
+ 	"/usr/local/lib/modprobe.d",
 @@ -258,8 +260,16 @@
  	if (env != NULL)
  		kmod_set_log_priority(ctx, log_priority(env));

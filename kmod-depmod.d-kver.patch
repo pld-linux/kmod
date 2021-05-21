@@ -7,9 +7,9 @@
 +static char kver_config_path[PATH_MAX] = SYSCONFDIR "/depmod.d/X.Y.Z";
  static const char *default_cfg_paths[] = {
 +	kver_config_path,
- 	"/run/depmod.d",
  	SYSCONFDIR "/depmod.d",
- 	"/lib/depmod.d",
+ 	"/run/depmod.d",
+ 	"/usr/local/lib/depmod.d",
 @@ -815,8 +817,16 @@
  	size_t i, n_files = 0;
  	struct cfg_file **files = NULL;
