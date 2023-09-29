@@ -5,7 +5,7 @@
  static const char CFG_BUILTIN_KEY[] = "built-in";
  static const char CFG_EXTERNAL_KEY[] = "external";
 +static char kver_config_path[PATH_MAX] = SYSCONFDIR "/depmod.d/X.Y.Z";
- static const char *default_cfg_paths[] = {
+ static const char *const default_cfg_paths[] = {
 +	kver_config_path,
  	SYSCONFDIR "/depmod.d",
  	"/run/depmod.d",

@@ -6,14 +6,14 @@ diff -ur kmod-12/libkmod/libkmod.c kmod-12-modprobe.d-kver/libkmod/libkmod.c
  };
  
 +static char kver_config_path[PATH_MAX] = SYSCONFDIR "/modprobe.d/X.Y.Z";
- static const char *default_config_paths[] = {
+ static const char *const default_config_paths[] = {
 +	kver_config_path,
  	SYSCONFDIR "/modprobe.d",
  	"/run/modprobe.d",
  	"/usr/local/lib/modprobe.d",
 @@ -258,8 +260,16 @@
- 	if (env != NULL)
- 		kmod_set_log_priority(ctx, log_priority(env));
+ 
+ 	ctx->kernel_compression = get_kernel_compression(ctx);
  
 -	if (config_paths == NULL)
 -		config_paths = default_config_paths;
