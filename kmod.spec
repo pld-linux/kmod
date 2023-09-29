@@ -112,7 +112,7 @@ Pliki nagłówkowe biblioteki %{name}.
 Summary:	bash-completion for kmod utilities
 Summary(pl.UTF-8):	Bashowe uzupełnianie nazw dla narzędzi kmod
 Group:		Applications/Shells
-Requires:	bash-completion >= 2.0
+Requires:	bash-completion >= 1:2.0
 BuildArch:	noarch
 
 %description -n bash-completion-kmod
