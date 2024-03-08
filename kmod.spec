@@ -1,4 +1,5 @@
 # TODO
+# - decide whether to create package with older python*-kmod or obsolete them
 # - alias from /etc/modprobe.d/3.4.32.longterm-1/geninitrd.conf does not work for geninitrd
 # - kmod no longer links with library dynamically since kmod-15:
 #   kmod binary statically links to libkmod - if distro is only interested in
@@ -6,20 +7,18 @@
 #
 # Conditional build:
 %bcond_without	openssl	# OpenSSL support for PKCS7 signatures in modinfo
-%bcond_without	python2	# CPython 2.x module
-%bcond_without	python3	# CPython 3.x module
 %bcond_with	apidocs	# gtk-doc based API documentation (currently disabled by empty gtk-doc.make file)
 %bcond_without	tests	# perform "make check" (init_module seems to require root for mkdir)
 
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	31
+Version:	32
 Release:	0.1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	6165867e1836d51795a11ea4762ff66a
+# Source0-md5:	1046fda48766fae905f83150d12eec78
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
@@ -34,12 +33,7 @@ BuildRequires:	kernel-module-build
 BuildRequires:	libtool >= 2:2.0
 %{?with_openssl:BuildRequires:	openssl-devel >= 1.1.0}
 BuildRequires:	pkgconfig
-%{?with_python2:BuildRequires:	python-devel >= 1:2.6}
-%{?with_python3:BuildRequires:	python3-devel >= 1:3.3}
 BuildRequires:	rpm-build >= 4.6
-%if %{with python2} || %{with python3}
-BuildRequires:	rpm-pythonprov
-%endif
 BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
@@ -83,6 +77,8 @@ Summary(pl.UTF-8):	Biblioteka do obsługi modułów jądra Linuksa
 License:	LGPL v2.1+
 Group:		Libraries
 Requires:	zstd >= 1.4.4
+#Obsoletes:	python-kmod < 32
+#Obsoletes:	python3-kmod < 32
 Conflicts:	kmod < 4-1
 
 %description libs
@@ -121,32 +117,6 @@ bash-completion for kmod utilities.
 %description -n bash-completion-kmod -l pl.UTF-8
 Bashowe uzupełnianie nazw dla narzędzi kmod.
 
-%package -n python-kmod
-Summary:	Python 2 binding for kmod API
-Summary(pl.UTF-8):	Wiązania Pythona 2 do API kmod
-License:	LGPL v2.1+
-Group:		Development/Languages/Python
-Requires:	%{name}-libs = %{version}-%{release}
-
-%description -n python-kmod
-Python 2 binding for kmod API.
-
-%description -n python-kmod -l pl.UTF-8
-Wiązania Pythona 2 do API kmod.
-
-%package -n python3-kmod
-Summary:	Python 3 binding for kmod API
-Summary(pl.UTF-8):	Wiązania Pythona 3 do API kmod
-License:	LGPL v2.1+
-Group:		Development/Languages/Python
-Requires:	%{name}-libs = %{version}-%{release}
-
-%description -n python3-kmod
-Python 3 binding for kmod API.
-
-%description -n python3-kmod -l pl.UTF-8
-Wiązania Pythona 3 do API kmod.
-
 %prep
 %setup -q
 %patch0 -p1
@@ -158,40 +128,21 @@ Wiązania Pythona 3 do API kmod.
 %{__autoconf}
 %{__autoheader}
 %{__automake}
-
-install -d build
-cd build
-../%configure \
+%configure \
 	--disable-silent-rules \
 	--disable-test-modules \
 	%{?with_apidocs:--enable-gtk-doc} \
 	%{?with_python2:--enable-python} \
+	--with-distconfdir=/%{_lib} \
 	%{?with_openssl:--with-openssl} \
 	--with-rootlibdir=/%{_lib} \
 	--with-xz \
 	--with-zlib \
 	--with-zstd
 %{__make}
-cd ..
-
-%if %{with python3}
-install -d build-py3
-cd build-py3
-../%configure \
-	PYTHON=%{__python3} \
-	--disable-silent-rules \
-	--disable-test-modules \
-	--enable-python \
-	--with-rootlibdir=/%{_lib} \
-	--with-xz \
-	--with-zlib \
-	--with-zstd
-%{__make}
-cd ..
-%endif
 
 %if %{with tests}
-%{__make} -C build check \
+%{__make} check \
 	KDIR=%{_kernelsrcdir} \
 	KVER=%{_kernel_ver}
 %endif
@@ -200,30 +151,11 @@ cd ..
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{/etc,/lib}/{depmod.d,modprobe.d}
 
-%if %{with python3}
-%{__make} -C build-py3 install \
+%{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
-%endif
-
-%{__make} -C build install \
-	DESTDIR=$RPM_BUILD_ROOT
-
-# install symlinks
-for prog in lsmod rmmod insmod modinfo modprobe depmod; do
-	ln -s kmod $RPM_BUILD_ROOT%{_bindir}/$prog
-done
 
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libkmod.la
-
-%if %{with python2}
-# not needed in python module
-%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/kmod/*.la
-%py_postclean
-%endif
-%if %{with python3}
-%{__rm} $RPM_BUILD_ROOT%{py3_sitedir}/kmod/*.la
-%endif
 
 :> $RPM_BUILD_ROOT/etc/modprobe.d/modprobe.conf
 
@@ -277,25 +209,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc libkmod/README
 %attr(755,root,root) %{_libdir}/libkmod.so
 %{_includedir}/libkmod.h
+%{_pkgconfigdir}/kmod.pc
 %{_pkgconfigdir}/libkmod.pc
 
 %files -n bash-completion-kmod
 %defattr(644,root,root,755)
-%{_datadir}/bash-completion/completions/kmod
-
-%if %{with python2}
-%files -n python-kmod
-%defattr(644,root,root,755)
-%dir %{py_sitedir}/kmod
-%attr(755,root,root) %{py_sitedir}/kmod/*.so
-%{py_sitedir}/kmod/*.py[co]
-%endif
-
-%if %{with python3}
-%files -n python3-kmod
-%defattr(644,root,root,755)
-%dir %{py3_sitedir}/kmod
-%attr(755,root,root) %{py3_sitedir}/kmod/*.so
-%{py3_sitedir}/kmod/*.py
-%{py3_sitedir}/kmod/__pycache__
-%endif
+%{bash_compdir}/kmod
