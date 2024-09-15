@@ -13,12 +13,12 @@
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	32
+Version:	33
 Release:	0.1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	1046fda48766fae905f83150d12eec78
+# Source0-md5:	c451c4aa61521adbe8af147f498046f8
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
@@ -170,7 +170,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc NEWS README.md TODO
+%doc NEWS README.md
 %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/blacklist.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/modprobe.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/modprobe.d/usb.conf
@@ -209,8 +209,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc libkmod/README
 %attr(755,root,root) %{_libdir}/libkmod.so
 %{_includedir}/libkmod.h
-%{_pkgconfigdir}/kmod.pc
 %{_pkgconfigdir}/libkmod.pc
+%{_npkgconfigdir}/kmod.pc
 
 %files -n bash-completion-kmod
 %defattr(644,root,root,755)
