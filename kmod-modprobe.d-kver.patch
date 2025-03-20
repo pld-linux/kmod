@@ -1,17 +1,17 @@
-diff -ur kmod-12/libkmod/libkmod.c kmod-12-modprobe.d-kver/libkmod/libkmod.c
---- kmod-12/libkmod/libkmod.c	2012-11-08 04:59:03.663747793 +0100
-+++ kmod-12-modprobe.d-kver/libkmod/libkmod.c	2012-12-12 19:43:19.385242679 +0100
-@@ -58,7 +58,9 @@
- 	[KMOD_INDEX_MODULES_BUILTIN] = { .fn = "modules.builtin", .prefix = ""},
+--- kmod-34.1/libkmod/libkmod.c.orig	2025-03-06 06:25:07.000000000 +0100
++++ kmod-34.1/libkmod/libkmod.c	2025-03-20 19:46:31.547435280 +0100
+@@ -41,8 +41,10 @@ static const struct {
+ 	// clang-format on
  };
  
 +static char kver_config_path[PATH_MAX] = SYSCONFDIR "/modprobe.d/X.Y.Z";
  static const char *const default_config_paths[] = {
+ 	// clang-format off
 +	kver_config_path,
  	SYSCONFDIR "/modprobe.d",
  	"/run/modprobe.d",
  	"/usr/local/lib/modprobe.d",
-@@ -258,8 +260,16 @@
+@@ -242,8 +244,16 @@ KMOD_EXPORT struct kmod_ctx *kmod_new(co
  
  	ctx->kernel_compression = get_kernel_compression(ctx);
  

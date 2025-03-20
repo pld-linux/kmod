@@ -13,12 +13,12 @@
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	33
+Version:	34.1
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	c451c4aa61521adbe8af147f498046f8
+# Source0-md5:	bdc01ba7d330685af597c16c5f58c0e2
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
@@ -50,6 +50,8 @@ Obsoletes:	module-init-tools < 4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_bindir		/sbin
+%define		_sbindir	/sbin
+%define		_slibdir	/%{_lib}
 
 %description
 kmod is a set of tools to handle common tasks with Linux kernel
@@ -130,12 +132,11 @@ Bashowe uzupełnianie nazw dla narzędzi kmod.
 %{__automake}
 %configure \
 	--disable-silent-rules \
-	--disable-test-modules \
 	%{?with_apidocs:--enable-gtk-doc} \
 	%{?with_python2:--enable-python} \
 	--with-distconfdir=/%{_lib} \
+	--with-fishcompletiondir=%{fish_compdir} \
 	%{?with_openssl:--with-openssl} \
-	--with-rootlibdir=/%{_lib} \
 	--with-xz \
 	--with-zlib \
 	--with-zstd
@@ -153,6 +154,10 @@ install -d $RPM_BUILD_ROOT{/etc,/lib}/{depmod.d,modprobe.d}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+install -d $RPM_BUILD_ROOT%{_slibdir}
+%{__mv} $RPM_BUILD_ROOT%{_libdir}/libkmod.so.* $RPM_BUILD_ROOT%{_slibdir}
+ln -sf --relative $RPM_BUILD_ROOT%{_slibdir}/libkmod.so.*.*.* $RPM_BUILD_ROOT%{_libdir}/libkmod.so
 
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libkmod.la
@@ -180,12 +185,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir /lib/modprobe.d
 
 %attr(755,root,root) %{_bindir}/kmod
-%attr(755,root,root) %{_bindir}/lsmod
-%attr(755,root,root) %{_bindir}/rmmod
-%attr(755,root,root) %{_bindir}/insmod
-%attr(755,root,root) %{_bindir}/modinfo
-%attr(755,root,root) %{_bindir}/modprobe
-%attr(755,root,root) %{_bindir}/depmod
+%attr(755,root,root) %{_sbindir}/lsmod
+%attr(755,root,root) %{_sbindir}/rmmod
+%attr(755,root,root) %{_sbindir}/insmod
+%attr(755,root,root) %{_sbindir}/modinfo
+%attr(755,root,root) %{_sbindir}/modprobe
+%attr(755,root,root) %{_sbindir}/depmod
 
 %{_mandir}/man5/depmod.d.5*
 %{_mandir}/man5/modprobe.d.5*
@@ -199,19 +204,30 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/modprobe.8*
 %{_mandir}/man8/rmmod.8*
 
+%{fish_compdir}/insmod.fish
+%{fish_compdir}/lsmod.fish
+%{fish_compdir}/rmmod.fish
+
+%{zsh_compdir}/_insmod
+%{zsh_compdir}/_lsmod
+%{zsh_compdir}/_rmmod
+
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) /%{_lib}/libkmod.so.*.*.*
-%attr(755,root,root) %ghost /%{_lib}/libkmod.so.2
+%attr(755,root,root) %{_slibdir}/libkmod.so.*.*.*
+%ghost %{_slibdir}/libkmod.so.2
 
 %files devel
 %defattr(644,root,root,755)
 %doc libkmod/README
-%attr(755,root,root) %{_libdir}/libkmod.so
+%{_libdir}/libkmod.so
 %{_includedir}/libkmod.h
 %{_pkgconfigdir}/libkmod.pc
 %{_npkgconfigdir}/kmod.pc
 
 %files -n bash-completion-kmod
 %defattr(644,root,root,755)
+%{bash_compdir}/insmod
 %{bash_compdir}/kmod
+%{bash_compdir}/lsmod
+%{bash_compdir}/rmmod

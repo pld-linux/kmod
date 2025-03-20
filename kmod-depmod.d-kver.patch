@@ -1,16 +1,17 @@
---- kmod-26/tools/depmod.c.orig	2019-03-31 13:50:56.277614760 +0200
-+++ kmod-26/tools/depmod.c	2019-03-31 13:53:23.093456646 +0200
-@@ -50,7 +50,9 @@
+--- kmod-34.1/tools/depmod.c.orig	2025-03-06 06:25:07.000000000 +0100
++++ kmod-34.1/tools/depmod.c	2025-03-20 19:52:09.144205408 +0100
+@@ -38,8 +38,10 @@ static int verbose = DEFAULT_VERBOSE;
  
  static const char CFG_BUILTIN_KEY[] = "built-in";
  static const char CFG_EXTERNAL_KEY[] = "external";
 +static char kver_config_path[PATH_MAX] = SYSCONFDIR "/depmod.d/X.Y.Z";
  static const char *const default_cfg_paths[] = {
+ 	// clang-format off
 +	kver_config_path,
  	SYSCONFDIR "/depmod.d",
  	"/run/depmod.d",
  	"/usr/local/lib/depmod.d",
-@@ -815,8 +817,16 @@
+@@ -895,8 +897,16 @@ static int cfg_load(struct cfg *cfg, con
  	size_t i, n_files = 0;
  	struct cfg_file **files = NULL;
  
