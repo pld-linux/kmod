@@ -47,6 +47,7 @@ Requires:	uname(release) >= 2.6.21
 Requires:	zstd >= 1.4.4
 Provides:	module-init-tools = 4.0
 Provides:	virtual(module-tools)
+Obsoletes:	bash-completion-kmod < 34.2
 Obsoletes:	module-init-tools < 4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -106,19 +107,6 @@ Header files for %{name} library.
 
 %description devel -l pl.UTF-8
 Pliki nagłówkowe biblioteki %{name}.
-
-%package -n bash-completion-kmod
-Summary:	bash-completion for kmod utilities
-Summary(pl.UTF-8):	Bashowe uzupełnianie nazw dla narzędzi kmod
-Group:		Applications/Shells
-Requires:	bash-completion >= 1:2.0
-BuildArch:	noarch
-
-%description -n bash-completion-kmod
-bash-completion for kmod utilities.
-
-%description -n bash-completion-kmod -l pl.UTF-8
-Bashowe uzupełnianie nazw dla narzędzi kmod.
 
 %prep
 %setup -q
@@ -208,6 +196,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/modprobe.8*
 %{_mandir}/man8/rmmod.8*
 
+%{bash_compdir}/insmod
+%{bash_compdir}/kmod
+%{bash_compdir}/lsmod
+%{bash_compdir}/rmmod
+
 %{fish_compdir}/insmod.fish
 %{fish_compdir}/lsmod.fish
 %{fish_compdir}/rmmod.fish
@@ -228,10 +221,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libkmod.h
 %{_pkgconfigdir}/libkmod.pc
 %{_npkgconfigdir}/kmod.pc
-
-%files -n bash-completion-kmod
-%defattr(644,root,root,755)
-%{bash_compdir}/insmod
-%{bash_compdir}/kmod
-%{bash_compdir}/lsmod
-%{bash_compdir}/rmmod
