@@ -36,6 +36,7 @@ BuildRequires:	libtool >= 2:2.0
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.752
+BuildRequires:	scdoc
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 BuildRequires:	xz-devel >= 1:4.99
