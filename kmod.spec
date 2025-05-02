@@ -23,6 +23,7 @@ Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
 Patch1:		%{name}-depmod.d-kver.patch
+Patch2:		xz-in-kernel-decompr-compat.patch
 URL:		https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
@@ -123,6 +124,7 @@ Bashowe uzupełnianie nazw dla narzędzi kmod.
 %setup -q
 %patch -P 0 -p1
 %patch -P 1 -p1
+%patch -P 2 -p1
 
 %build
 %{__libtoolize}

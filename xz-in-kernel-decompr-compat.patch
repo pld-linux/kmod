@@ -1,0 +1,45 @@
+--- kmod-34.2/libkmod/libkmod.c.orig	2025-05-02 14:53:30.252042909 +0200
++++ kmod-34.2/libkmod/libkmod.c	2025-05-02 20:20:41.040692282 +0200
+@@ -206,9 +206,39 @@
+ 
+ 	if (streq(buf, "zstd\n"))
+ 		return KMOD_FILE_COMPRESSION_ZSTD;
+-	else if (streq(buf, "xz\n"))
+-		return KMOD_FILE_COMPRESSION_XZ;
+-	else if (streq(buf, "gzip\n"))
++	else if (streq(buf, "xz\n")) {
++		struct utsname u;
++		long major, minor;
++		char *num, *endptr;
++
++		if (uname(&u) < 0)
++			return KMOD_FILE_COMPRESSION_NONE;
++
++		num = strtok(u.release, ".");
++
++		if (num == NULL)
++			return KMOD_FILE_COMPRESSION_NONE;
++
++		major = strtol(num, &endptr, 10);
++
++		if (*endptr != '\0')
++			return KMOD_FILE_COMPRESSION_NONE;
++
++		num = strtok(NULL, ".");
++
++		if (num == NULL)
++			return KMOD_FILE_COMPRESSION_NONE;
++
++		minor = strtol(num, &endptr, 10);
++
++		if (*endptr != '\0')
++			return KMOD_FILE_COMPRESSION_NONE;
++
++		if (major > 6L || (major == 6L && minor >= 6L))
++			return KMOD_FILE_COMPRESSION_XZ;
++		else
++			return KMOD_FILE_COMPRESSION_NONE;
++	} else if (streq(buf, "gzip\n"))
+ 		return KMOD_FILE_COMPRESSION_ZLIB;
+ 
+ 	ERR(ctx, "unknown kernel compression %s", buf);
