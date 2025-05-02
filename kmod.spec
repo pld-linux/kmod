@@ -137,7 +137,9 @@ Bashowe uzupełnianie nazw dla narzędzi kmod.
 	%{?with_apidocs:--enable-gtk-doc} \
 	%{?with_python2:--enable-python} \
 	--with-distconfdir=/%{_lib} \
+	--with-bashcompletiondir=%{bash_compdir} \
 	--with-fishcompletiondir=%{fish_compdir} \
+	--with-zshcompletiondir=%{zsh_compdir} \
 	%{?with_openssl:--with-openssl} \
 	--with-xz \
 	--with-zlib \
