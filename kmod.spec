@@ -1,5 +1,4 @@
 # TODO
-# - decide whether to create package with older python*-kmod or obsolete them
 # - alias from /etc/modprobe.d/3.4.32.longterm-1/geninitrd.conf does not work for geninitrd
 # - kmod no longer links with library dynamically since kmod-15:
 #   kmod binary statically links to libkmod - if distro is only interested in
@@ -84,8 +83,8 @@ Summary(pl.UTF-8):	Biblioteka do obsługi modułów jądra Linuksa
 License:	LGPL v2.1+
 Group:		Libraries
 Requires:	zstd >= 1.4.4
-#Obsoletes:	python-kmod < 32
-#Obsoletes:	python3-kmod < 32
+Obsoletes:	python-kmod < 32
+Obsoletes:	python3-kmod < 32
 Conflicts:	kmod < 4-1
 
 %description libs
