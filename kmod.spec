@@ -56,6 +56,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_sbindir	/sbin
 %define		_slibdir	/%{_lib}
 
+%define		filterout_cpp	-DNDEBUG
+
 %description
 kmod is a set of tools to handle common tasks with Linux kernel
 modules like insert, remove, list, check properties, resolve
