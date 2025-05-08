@@ -26,6 +26,7 @@ Patch2:		xz-in-kernel-decompr-compat.patch
 URL:		https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
+BuildRequires:	bash-completion-devel >= 1:2.0
 %{?with_apidocs:BuildRequires:	gtk-doc >= 1.14}
 %if %{with tests}
 BuildRequires:	kernel-module-build
@@ -54,6 +55,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_bindir		/sbin
 %define		_sbindir	/sbin
 %define		_slibdir	/%{_lib}
+%define		bash_compdir	%(pkg-config --variable compatdir bash-completion 2> /dev/null || echo ERROR)
 
 %define		filterout_cpp	-DNDEBUG
 
