@@ -139,7 +139,8 @@ Pliki nagłówkowe biblioteki %{name}.
 %if %{with tests}
 %{__make} check \
 	KDIR=%{_kernelsrcdir} \
-	KVER=%{_kernel_ver}
+	KVER=%{_kernel_ver} \
+	MAKEFLAGS=CONFIG_RANDSTRUCT=n
 %endif
 
 %install
