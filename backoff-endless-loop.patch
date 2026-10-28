@@ -1,0 +1,51 @@
+From f14f2603820e46b1946d8f96eee10c99690aea82 Mon Sep 17 00:00:00 2001
+From: Tobias Stoeckmann <tobias@stoeckmann.org>
+Date: Sun, 29 Jun 2025 13:13:34 +0200
+Subject: [PATCH] util: fix endless loop in get_backoff_delta_msec
+
+If current time t is already past tend, the while loop in
+get_backoff_delta_msec never ends.
+
+Signed-off-by: Tobias Stoeckmann <tobias@stoeckmann.org>
+Link: https://github.com/kmod-project/kmod/pull/377
+Signed-off-by: Lucas De Marchi <lucas.de.marchi@gmail.com>
+---
+ shared/util.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
+
+diff --git a/shared/util.c b/shared/util.c
+index 2ffe56471..3d5d179bb 100644
+--- a/shared/util.c
++++ b/shared/util.c
+@@ -540,16 +540,23 @@ unsigned long long get_backoff_delta_msec(unsigned long long tend,
+ 
+ 	t = now_msec();
+ 
+-	if (!*delta)
+-		*delta = 1;
+-	else
+-		*delta <<= 1;
++	if (tend <= t) {
++		/* Timeout already reached */
++		*delta = 0;
++	} else {
++		const unsigned long long limit = tend - t;
++
++		if (!*delta)
++			*delta = 1;
++		else
++			*delta <<= 1;
+ 
+-	while (t + *delta > tend)
+-		*delta >>= 1;
++		while (*delta > limit)
++			*delta >>= 1;
+ 
+-	if (!*delta && tend > t)
+-		*delta = tend - t;
++		if (!*delta)
++			*delta = limit;
++	}
+ 
+ 	return t + *delta;
+ }

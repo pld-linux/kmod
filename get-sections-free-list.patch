@@ -1,0 +1,52 @@
+From 0e72cc59c956b78fe12172cec7bd14d0f09ad651 Mon Sep 17 00:00:00 2001
+From: Syed Labeeq Sajid Bukhari <syedlabeeq@gmail.com>
+Date: Mon, 12 Oct 2026 15:16:10 +0500
+Subject: [PATCH] libkmod: fix type confusion in kmod_module_get_sections()
+ error path
+
+The fail: path of kmod_module_get_sections() releases the partially
+built list with kmod_module_unref_list(), but the list elements are
+struct kmod_module_section, not struct kmod_module.
+
+kmod_module_unref() on a section object first reads and decrements
+mod->refcount, which sits at offset 80 of struct kmod_module, while a
+section allocation is only 8 + strlen(name) + 1 bytes (~17-25 bytes)
+-- an out-of-bounds read+write on the heap. If the decremented value
+happens to be <= 0, execution continues with mod->ctx aliasing
+section->address and mod->path/mod->hashkey aliasing the section name
+bytes, leading to wild dereferences and frees of semi-controlled
+pointers (kmod_pool_del_module, kmod_module_unref_list(mod->dep),
+free(mod->path)).
+
+The bug is reachable through the public API kmod_module_get_sections()
+(used by modinfo) whenever the loop over /sys/module/<mod>/sections/
+fails mid-iteration after at least one section was appended: an
+openat/read failure (e.g. module unload race or an unreadable section
+file) or a malloc failure.
+
+The function's own API documentation in libkmod.h states the returned
+list must be freed with kmod_module_section_free_list(); the error
+path is the only place that violates this.
+
+Fix it by freeing the list with kmod_module_section_free_list(), as
+the success path and the API contract already do.
+
+Link: https://github.com/kmod-project/kmod/pull/467
+Signed-off-by: Lucas De Marchi <demarchi@kernel.org>
+---
+ libkmod/libkmod-module.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libkmod/libkmod-module.c b/libkmod/libkmod-module.c
+index 2248acf2..17dce973 100644
+--- a/libkmod/libkmod-module.c
++++ b/libkmod/libkmod-module.c
+@@ -1748,7 +1748,7 @@ KMOD_EXPORT struct kmod_list *kmod_module_get_sections(const struct kmod_module
+ 
+ fail:
+ 	closedir(d);
+-	kmod_module_unref_list(list);
++	kmod_module_section_free_list(list);
+ 	return NULL;
+ }
+ 
