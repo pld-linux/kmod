@@ -12,20 +12,18 @@
 Summary:	Linux kernel module handling
 Summary(pl.UTF-8):	Obsługa modułów jądra Linuksa
 Name:		kmod
-Version:	34.2
-Release:	3
+Version:	34.3
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
-# Source0-md5:	36f2cc483745e81ede3406fa55e1065a
+# Source0-md5:	142a3e10a40fb14fadedae2e2147c2d6
 Source1:	%{name}-blacklist
 Source2:	%{name}-usb
 Patch0:		%{name}-modprobe.d-kver.patch
 Patch1:		%{name}-depmod.d-kver.patch
 Patch2:		xz-in-kernel-decompr-compat.patch
 # https://github.com/kmod-project/kmod/commit/d236920b20fd70a139f8af2ff6f5c18d830be491
-Patch3:		alias-normalize-overflow.patch
-# https://github.com/kmod-project/kmod/commit/0e72cc59c956b78fe12172cec7bd14d0f09ad651
 Patch4:		get-sections-free-list.patch
 # https://github.com/kmod-project/kmod/commit/f14f2603820e46b1946d8f96eee10c99690aea82
 Patch5:		backoff-endless-loop.patch
@@ -120,12 +118,11 @@ Pliki nagłówkowe biblioteki %{name}.
 
 %prep
 %setup -q
-%patch -P 0 -p1
-%patch -P 1 -p1
-%patch -P 2 -p1
-%patch -P 3 -p1
-%patch -P 4 -p1
-%patch -P 5 -p1
+%patch -P0 -p1
+%patch -P1 -p1
+%patch -P2 -p1
+%patch -P4 -p1
+%patch -P5 -p1
 
 %build
 %{__libtoolize}
@@ -224,7 +221,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdir}/libkmod.so.*.*.*
+%{_slibdir}/libkmod.so.*.*.*
 %ghost %{_slibdir}/libkmod.so.2
 
 %files devel
